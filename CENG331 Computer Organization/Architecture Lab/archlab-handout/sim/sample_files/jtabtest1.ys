@@ -1,0 +1,23 @@
+.pos 0
+start:
+irmovq $16, %r8
+jtab table, %r8
+
+bra1:
+irmovq $1, %r9
+halt
+bra2:
+irmovq $5, %r9
+halt
+bra3:
+irmovq $7, %r9
+halt
+bra4:
+irmovq $9, %r9
+halt
+
+table:
+.quad bra1
+.quad bra2
+.quad bra3
+.quad bra4

@@ -1,0 +1,35 @@
+# NAME SURNAME ID
+.pos 0x0
+init:
+    irmovq stack, %rsp
+    irmovq $6, %rdx
+    irmovq array_begin, %rdi
+    irmovq array_end, %rsi
+    call binary_search
+    halt
+
+#implement your code below (DO NOT CHANGE/REMOVE THIS COMMENT)
+
+binary_search:
+    irmovq $-1, %rax
+    ret
+
+#implement your code above (DO NOT CHANGE/REMOVE THIS COMMENT)
+
+.pos 0x1008
+array_begin:
+    .quad 1
+    .quad 2
+    .quad 3
+    .quad 5
+    .quad 6
+    .quad 7
+    .quad 9
+    .quad 11
+array_end:
+    .quad 0
+.pos 0x1F00
+stack:
+    .quad 0
+
+

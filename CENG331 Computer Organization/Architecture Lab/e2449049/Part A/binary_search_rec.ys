@@ -1,0 +1,94 @@
+# Burak Yildiz 2449049
+.pos 0x0
+init:
+    irmovq stack, %rsp
+    irmovq $6, %rdx
+    irmovq array_begin, %rdi
+    irmovq array_end, %rsi
+    call binary_search
+    halt
+
+#implement your code below (DO NOT CHANGE/REMOVE THIS COMMENT)
+
+
+
+binary_search:
+	irmovq $16, %r8
+	irmovq $8, %r9
+	rrmovq %rsi, %rcx		# rcx e end koy
+	subq %rdi, %rcx			# rcx e end-begin koy
+	dvvq %r8, %rcx			# rcx e end-begin/16
+	mllq %r9, %rcx			# rcx e 8*(end-begin/16)
+	addq %rdi, %rcx			# rcx e begin + ((end - begin) >> 1) MID
+	mrmovq (%rcx), %r11		# r11 e mid degerini koy
+	rrmovq %rdi, %r10		# r10 a begin koy
+	subq %rsi, %r10			# r10 a begin-end koy
+	jge end
+	subq %rdx, %r11			# r11 e mid-value koy
+	je equal
+	jl less
+	jmp rec
+equal:
+	rrmovq %rcx, %r11		# r11 e mid  koy
+	subq %rdi, %r11			# r11 e mid - begin koy
+	irmovq $1, %r12			# r12 ye 1 koy
+	dvvq %r9, %r11			# r11 e (mid - begin) / 8 koy
+	addq %r12, %r11			# r11 e (mid - begin) / 8 + 1 koy
+	rrmovq %r11, %rax		# ret mid-begin + 1
+	ret
+less:
+	irmovq $8, %r12			# r12 ye 8 koy
+	addq %rcx, %r12 		# r12 ye mid+8 koy
+	pushq %rdi
+	rrmovq %r12, %rdi		# rdi ye mid+1
+	call binary_search		# binary_search_rec(mid + 1, end, value)
+	popq %rdi
+	rrmovq %rax, %r13		# r13 tmp 
+	irmovq $-1, %r12		# r12 ye -1 koy
+	subq %r13, %r12			# r12 ye -1 - tmp
+	je tmpyes
+	jne tmpno
+
+tmpno:
+	pushq %rcx
+	rrmovq %r13, %rax		# rax a tmp koy
+	subq %rdi, %rcx			# rcx e (mid - begin) koy
+	dvvq %r9, %rcx			# rcx e (mid - begin) / 8 koy
+	irmovq $1, %r12			# r12 ye 1 koy
+	addq %r12, %rcx			# rcx e (mid - begin) / 8 + 1 koy
+	rrmovq %rcx, %rax		# rax a tmp + (mid - begin) / 8 + 1 koy
+	popq %rcx
+	ret				# return tmp + (mid - begin) + 1;
+tmpyes:
+	subq %r12, %r13
+	rrmovq %r13, %rax		# rax a temp koy	
+	ret 				# return tmp;
+rec:
+	rrmovq %rcx, %rsi		# rsi ye mid koy	
+	call binary_search		# return binary_search_rec(begin, mid, value);
+	ret
+
+end:
+	irmovq $-1, %rax		# return -1
+	ret
+    	
+
+#implement your code above (DO NOT CHANGE/REMOVE THIS COMMENT)
+
+.pos 0x1008
+array_begin:
+    .quad 1
+    .quad 2
+    .quad 3
+    .quad 5
+    .quad 6
+    .quad 7
+    .quad 9
+    .quad 11
+array_end:
+    .quad 0
+.pos 0x1F00
+stack:
+    .quad 0
+
+

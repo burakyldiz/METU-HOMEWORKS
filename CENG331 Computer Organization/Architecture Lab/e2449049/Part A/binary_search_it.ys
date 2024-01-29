@@ -1,0 +1,87 @@
+# Burak Yildiz 2449049
+.pos 0x0
+init:
+    irmovq stack, %rsp
+    irmovq $6, %rdx
+    irmovq array_begin, %rdi
+    irmovq array_end, %rsi
+    call binary_search
+    halt
+
+#implement your code below (DO NOT CHANGE/REMOVE THIS COMMENT)
+
+# RCX - INITIAL BEGIN 
+# RDX - VALUE
+# RDI - BEGIN
+# RSI - END
+# R12 - END - BEGIN
+# R13 - 16
+# R14 - 8
+# R11 - begin + 8*(end-begin)/16
+# RBX - MID
+# R8 - VALUE
+# R10 - MID - VALUE
+
+binary_search:
+    	rrmovq %rdi, %rcx
+	jmp loop_check
+
+loop_check:
+	rrmovq %rsi, %r12  	
+	subq %rdi, %r12 	
+	jg loop		
+	jmp end			
+
+loop:
+	irmovq $16, %r13	# r13 e 16koy
+	irmovq $8, %r14		# r14 e 8 koy
+	rrmovq %rsi, %r11	# r11 e end koy
+	subq %rdi, %r11		# r11 e end-begin koy
+	dvvq %r13, %r11		# r11 e (end-begin)/16
+	mllq %r14, %r11		# r11 e 8*(end-begin)/16
+	addq %rdi, %r11		# r11 e begin + 8*(end-begin)/16
+	rrmovq %r11, %rbx	# rbx e begin + 8*(end-begin)/16 koy (mid)
+	rrmovq %rdx, %r8	# r8 e value'yu koy
+	mrmovq (%rbx), %r10	# midi r10a koy
+	subq %r8, %r10		# r10 e mid-value koy
+	je found		# mid == value 
+	jl less			# mid < value
+	rrmovq %rbx, %rsi	# else rsi yani end mid e eşitlensin
+	jmp loop_check		# loopu kontrol et
+
+found:
+	subq %rcx, %rbx		# rbx e mid - initial begin i koy
+	irmovq $1, %r9		# r9 a 1 koy
+	dvvq %r14, %rbx		# rbx e (mid-initial_begin) / 8 koy
+	addq %r9, %rbx		# rbx e (mid-initial_begin) / 8 + 1 koy
+	rrmovq %rbx, %rax	# return (mid-initial_begin) / 8 + 1 
+	ret
+less:
+	rrmovq %rbx, %r10	# r10 a mid koy
+	addq %r14, %r10		# r10 e mid+1 koy
+	rrmovq %r10, %rdi	# rdi = begin = mid+1
+	jmp loop_check
+
+end:
+	irmovq $-1, %rax
+    	ret
+
+#implement your code above (DO NOT CHANGE/REMOVE THIS COMMENT)
+
+.pos 0x1008
+array_begin:
+    .quad 1
+    .quad 2
+    .quad 3
+    .quad 5
+    .quad 6
+    .quad 7
+    .quad 9
+    .quad 11
+array_end:
+    .quad 0
+.pos 0x1F00
+stack:
+    .quad 0
+
+
