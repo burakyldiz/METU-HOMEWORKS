@@ -1,0 +1,432 @@
+\chapter{Specific Requirements} \label{specificRequirements}
+
+\section{External Interfaces}
+\begin{figure}[H]
+    \centering
+\includesvg[inkscapelatex=false, scale=0.56]{./Figures/external_interface_class_diagram.svg}
+\caption{Class Diagram for External Interfaces}
+\end{figure}
+
+The FarmBot system is designed with multiple external interfaces to interact with system elements and external entities, including user input mechanisms and automated data retrieval systems. These interfaces are crucial for the operation of the FarmBot and define how it communicates with the external world.
+
+\subsection{User Interface API}
+\begin{itemize}
+    \item \textbf{Name:} User Interface API
+    \item \textbf{Purpose:} To allow users to interact with the FarmBot system for monitoring and control purposes.
+    \item \textbf{Source of Input:} User through web or mobile interface.
+    \item \textbf{Destination of Output:} FarmBot hardware and software systems for execution of tasks.
+\end{itemize}
+
+\subsection{Plant Database API}
+\begin{itemize}
+    \item \textbf{Name:} Plant Database API
+    \item \textbf{Purpose:} To provide access to a database of plant types and their growing requirements.
+    \item \textbf{Source of Input:} FarmBot system querying for data.
+    \item \textbf{Destination of Output:} User interface for display, and FarmBot's scheduling system for planning.
+\end{itemize}
+
+\subsection{Sensor Data Interface}
+\begin{itemize}
+    \item \textbf{Name:} Sensor Data Interface
+    \item \textbf{Purpose:} To collect environmental data such as soil moisture and temperature for the FarmBot to make informed decisions.
+    \item \textbf{Source of Input:} Environmental sensors deployed within the FarmBot operational area.
+    \item \textbf{Destination of Output:} FarmBot's decision support system and user interface for real-time environmental data display.
+\end{itemize}
+
+\subsection{Diagnostic and Logging API}
+\begin{itemize}
+    \item \textbf{Name:} Diagnostic and Logging API
+    \item \textbf{Purpose:} To collect and maintain logs related to system diagnostics and operations.
+    \item \textbf{Source of Input:} FarmBot hardware and software components.
+    \item \textbf{Destination of Output:} Centralized logging storage, and the user interface for system status reports.
+\end{itemize}
+
+\subsection{Weather API}
+\begin{itemize}
+    \item \textbf{Name:} Weather API
+    \item \textbf{Purpose:} To provide weather forecasts to optimize FarmBot's farming operations.
+    \item \textbf{Source of Input:} Online weather service.
+    \item \textbf{Destination of Output:} FarmBot's scheduling system to adjust operations based on weather conditions.
+\end{itemize}
+
+\subsection{Remote Update API}
+\begin{itemize}
+    \item \textbf{Name:} Remote Update API
+    \item \textbf{Purpose:} To manage and deploy software updates to the FarmBot system.
+    \item \textbf{Source of Input:} Remote update server.
+    \item \textbf{Destination of Output:} FarmBot's internal systems to apply updates.
+\end{itemize}
+
+\subsection{GPS Communication Interface}
+\begin{itemize}
+    \item \textbf{Name:} GPS Communication Interface
+    \item \textbf{Purpose:} To provide real-time geolocation data for the FarmBot.
+    \item \textbf{Source of Input:} GPS satellites.
+    \item \textbf{Destination of Output:} FarmBot's control system for accurate positioning and tracking.
+\end{itemize}
+
+\subsection{Farming Schedule API}
+\begin{itemize}
+    \item \textbf{Name:} Farming Schedule API
+    \item \textbf{Purpose:} To handle the timing and execution of farming tasks.
+    \item \textbf{Source of Input:} User-defined schedules and automated system recommendations.
+    \item \textbf{Destination of Output:} FarmBot's actuators and task management system.
+\end{itemize}
+
+These interfaces incorporate bi-directional flows of information where applicable, facilitating a responsive and adaptable system. The inputs and outputs defined here are based on conceptual knowledge and should be verified against the actual FarmBot API documentation for accuracy.
+
+\section{Functions}
+
+\begin{figure}[H]
+    \centering
+\includesvg[inkscapelatex=false, scale=0.51]{./Figures/UseCaseDiagram.svg}
+\caption{Use Case Diagram}
+\end{figure}
+    
+\begin{table}[H]
+\centering
+\footnotesize
+\begin{tabular}{|p{3.5cm}|p{8.5cm}|}
+\hline
+\textbf{Use case name}    & Seed Planting \\
+\hline
+\textbf{Actors}           & FarmBot, Farmer \\
+\hline
+\textbf{Description}      & Automate the process of planting seeds on the current state of the dynamic garden topography. \\
+\hline
+\textbf{Data}             & Seed type, planting depth, spacing, garden layout, planting coordinates \\
+\hline
+\textbf{Preconditions}    & FarmBot is operational and loaded with the correct seed types. \\
+\hline
+\textbf{Stimulus}         & Farmer selects the seeding plan through the control interface. \\
+\hline
+\textbf{Basic flow}       & Farmer inputs the garden layout and seed details $\rightarrow$ FarmBot plants seeds according to the specified parameters. \\
+\hline
+\textbf{Alternative flow} & Manual intervention for complex planting patterns not recognized by FarmBot. \\
+\hline
+\textbf{Exception flow}   & Seed jam or misplacement triggers an alert to the farmer for manual resolution. \\
+\hline
+\textbf{Post conditions}  & Seeds are planted according to the layout; system is ready for the next task. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Plant Seeding}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Watering \\
+\hline
+\textbf{Actors}           & FarmBot, Environmental Sensors \\
+\hline
+\textbf{Description}      & Automate watering of plants based on soil moisture levels. \\
+\hline
+\textbf{Data}             & Soil moisture threshold, amount of water per plant \\
+\hline
+\textbf{Preconditions}    & Water supply is connected and sensors are calibrated. \\
+\hline
+\textbf{Stimulus}         & Soil moisture levels fall below the set threshold. \\
+\hline
+\textbf{Basic flow}       & Sensors detect low moisture $\rightarrow$ FarmBot waters the plants accordingly. \\
+\hline
+\textbf{Alternative flow} & Scheduled watering if sensor data is unavailable. \\
+\hline
+\textbf{Exception flow}   & Water supply error triggers an alert. \\
+\hline
+\textbf{Post conditions}  & Plants are watered; soil moisture is adequate. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Watering}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+\includesvg[inkscapelatex=false, scale=0.75]{./Figures/watering-state-diagram.svg}
+\caption{State Diagram for Watering}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Weeding \\
+\hline
+\textbf{Actors}           & FarmBot \\
+\hline
+\textbf{Description}      & Identify and remove weeds from the garden. \\
+\hline
+\textbf{Data}             & Plant vs. weed identification parameters \\
+\hline
+\textbf{Preconditions}    & FarmBot's vision system is calibrated for plant/weed differentiation. \\
+\hline
+\textbf{Stimulus}         & Scheduled weeding or manual initiation by the farmer. \\
+\hline
+\textbf{Basic flow}       & FarmBot identifies weeds $\rightarrow$ Removes weeds mechanically. \\
+\hline
+\textbf{Alternative flow} & Manual removal of weeds that FarmBot cannot identify. \\
+\hline
+\textbf{Exception flow}   & Damage to a plant is detected, pausing operation for review. \\
+\hline
+\textbf{Post conditions}  & Garden is free of weeds. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Weeding}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Soil Testing \\
+\hline
+\textbf{Actors}           & FarmBot, Farmer \\
+\hline
+\textbf{Description}      & Automate the collection and analysis of soil samples. \\
+\hline
+\textbf{Data}             & pH, moisture content, nutrient levels \\
+\hline
+\textbf{Preconditions}    & FarmBot is equipped with soil testing tools and reagents. \\
+\hline
+\textbf{Stimulus}         & Scheduled testing or farmer request. \\
+\hline
+\textbf{Basic flow}       & FarmBot collects soil samples $\rightarrow$ Analyzes for key parameters $\rightarrow$ Reports results. \\
+\hline
+\textbf{Alternative flow} & Samples sent to a lab for more comprehensive analysis. \\
+\hline
+\textbf{Exception flow}   & Inconclusive results trigger re-sampling. \\
+\hline
+\textbf{Post conditions}  & Farmer receives soil health report. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Soil Testing}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Harvesting \\
+\hline
+\textbf{Actors}           & FarmBot, Farmer \\
+\hline
+\textbf{Description}      & Automate the harvesting of ripe crops. \\
+\hline
+\textbf{Data}             & Crop type, ripeness indicators \\
+\hline
+\textbf{Preconditions}    & FarmBot's vision system can identify ripe crops. \\
+\hline
+\textbf{Stimulus}         & Crops reach maturity according to the growth timeline or visual inspection. \\
+\hline
+\textbf{Basic flow}       & Identification of ripe crops $\rightarrow$ Automated or assisted harvesting. \\
+\hline
+\textbf{Alternative flow} & Manual harvesting for delicate or complex crops. \\
+\hline
+\textbf{Exception flow}   & Damage to crops during harvesting triggers an alert. \\
+\hline
+\textbf{Post conditions}  & Ripe crops are harvested. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Harvesting}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Monitoring Plant Health \\
+\hline
+\textbf{Actors}           & FarmBot, Environmental Sensors, Farmer \\
+\hline
+\textbf{Description}      & Continuously monitor plant health and environmental conditions. \\
+\hline
+\textbf{Data}             & Plant growth metrics, environmental data \\
+\hline
+\textbf{Preconditions}    & Sensors and vision systems are operational. \\
+\hline
+\textbf{Stimulus}         & Ongoing monitoring as part of the daily cycle. \\
+\hline
+\textbf{Basic flow}       & Collect data $\rightarrow$ Analyze for health indicators $\rightarrow$ Alert farmer of issues. \\
+\hline
+\textbf{Alternative flow} & Request manual inspection if anomalies are detected. \\
+\hline
+\textbf{Exception flow}   & System malfunction halts monitoring until fixed. \\
+\hline
+\textbf{Post conditions}  & Farmer is informed of plant health status. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Monitoring Plant Health}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+\includesvg[inkscapelatex=false, scale=0.8]{./Figures/activity_diagram_health.svg}
+\caption{Activity Diagram for Monitoring Plant Health}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Fertilizing \\
+\hline
+\textbf{Actors}           & FarmBot, Farmer \\
+\hline
+\textbf{Description}      & Automate the distribution of fertilizers based on soil and plant needs. \\
+\hline
+\textbf{Data}             & Fertilizer type, application rate, targeted plants \\
+\hline
+\textbf{Preconditions}    & Fertilizer is loaded and FarmBot is calibrated for accurate distribution. \\
+\hline
+\textbf{Stimulus}         & Scheduled application or as dictated by soil/plant health data. \\
+\hline
+\textbf{Basic flow}       & Determine nutrient needs $\rightarrow$ FarmBot applies fertilizer accordingly. \\
+\hline
+\textbf{Alternative flow} & Hand application for areas FarmBot cannot reach or for special treatments. \\
+\hline
+\textbf{Exception flow}   & Over or under fertilization detected, prompting adjustment or alert. \\
+\hline
+\textbf{Post conditions}  & Plants receive the necessary nutrients; system ready for next operation. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Fertilizing}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Data Logging and Analysis \\
+\hline
+\textbf{Actors}           & FarmBot, Farmer, Cloud Services \\
+\hline
+\textbf{Description}      & Collect and analyze farming data to optimize future farming practices. \\
+\hline
+\textbf{Data}             & Plant growth data, environmental conditions, FarmBot operational data \\
+\hline
+\textbf{Preconditions}    & Data collection tools and analysis software are operational. \\
+\hline
+\textbf{Stimulus}         & Continuous data collection as part of FarmBot's operations. \\
+\hline
+\textbf{Basic flow}       & Data is logged $\rightarrow$ Transmitted to cloud for analysis $\rightarrow$ Insights are generated. \\
+\hline
+\textbf{Alternative flow} & Data analyzed locally for immediate adjustments. \\
+\hline
+\textbf{Exception flow}   & Data corruption or loss triggers a system check and potential reconfiguration. \\
+\hline
+\textbf{Post conditions}  & Farmer receives actionable insights and historical data is archived. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Data Logging and Analysis}
+\end{table}
+
+\begin{figure}[H]
+    \centering
+\includesvg[inkscapelatex=false, scale=0.7]{./Figures/data-logging-sequence.svg}
+\caption{Sequence Diagram for Data Logging and Analysis}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Pest Detection and Management \\
+\hline
+\textbf{Actors}           & FarmBot, Farmer \\
+\hline
+\textbf{Description}      & Identify pests and apply appropriate management strategies. \\
+\hline
+\textbf{Data}             & Pest types, affected plants, management methods \\
+\hline
+\textbf{Stimulus}         & Regular monitoring or farmer initiates pest scan. \\
+\hline
+\textbf{Basic flow}       & Detect pests $\rightarrow$ Identify $\rightarrow$ Apply non-chemical/chemical management. \\
+\hline
+\textbf{Alternative flow} & Manual intervention for pests not recognized or for delicate areas. \\
+\hline
+\textbf{Exception flow}   & Incorrect pest management application triggers review and correction. \\
+\hline
+\textbf{Post conditions}  & Pest levels are managed; minimal impact on crops. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Pest Detection and Management}
+\end{table}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{4cm}|p{9cm}|}
+\hline
+\textbf{Use case name}    & Crop Rotation Planning \\
+\hline
+\textbf{Actors}           & FarmBot, Farmer \\
+\hline
+\textbf{Description}      & Assist in planning crop rotation to maintain soil health and reduce pests. \\
+\hline
+\textbf{Data}             & Historical crop data, soil health data, crop rotation strategies \\
+\hline
+\textbf{Preconditions}    & Access to historical farming data and crop rotation models. \\
+\hline
+\textbf{Stimulus}         & End of growing season or during planning phase. \\
+\hline
+\textbf{Basic flow}       & Analyze data $\rightarrow$ Generate crop rotation plan $\rightarrow$ Implement plan with FarmBot assistance. \\
+\hline
+\textbf{Alternative flow} & Farmer adjusts plan based on personal knowledge or preferences. \\
+\hline
+\textbf{Exception flow}   & Inadequate data for planning triggers manual planning process. \\
+\hline
+\textbf{Post conditions}  & Crop rotation plan is established; ready for implementation in the next season. \\
+\hline
+\end{tabular}
+\caption{Use Case Model for Crop Rotation Planning}
+\end{table}
+
+
+\section{Logical Database Requirements}
+
+\begin{figure}[H]
+    \centering
+\includesvg[inkscapelatex=false, scale=0.42]{./Figures/LogicDiagram.svg}
+\caption{Logical Database Class Diagram}
+\end{figure}
+
+The FarmBot system's logical database is structured to optimize the automation of precision agriculture. Key data objects include:
+
+\textbf{Planting Data:} Holds records for plant species, planting coordinates, sowing depth, and spacing requirements.
+
+\textbf{Environmental Data:} Stores readings from environmental sensors, including moisture levels, temperature, and weather conditions.
+
+\textbf{Operation Logs:} Contains a historical record of all operations performed by FarmBot, such as watering, weeding, and fertilizing actions, along with timestamps and outcomes.
+
+\textbf{User Account Data:} Manages user information, including credentials, configuration preferences, and roles.
+
+\textbf{Scheduling Data:} Keeps track of planting and watering schedules, task prioritization, and event triggers based on environmental data.
+
+The class diagram for these data objects would illustrate their interrelationships, ensuring clear understanding without the need for additional dictionaries.
+
+\section{Design Constraints}
+The FarmBot system is subject to the following design constraints:
+
+\textbf{Environmental Conditions:} FarmBot must withstand outdoor conditions and variable weather.
+
+\textbf{Compatibility:} The system should be compliant with common agricultural software and hardware interfaces to ensure interoperability with various sensors and devices.
+
+\textbf{Regulatory Compliance:} Adherence to international standards for safety, privacy, and environmental impact is mandatory.
+
+\textbf{Resource Efficiency:} Design must promote energy and water conservation, fitting into sustainable agriculture practices.
+
+\section{System Quality Attributes}
+For FarmBot, the following quality attributes are essential:
+
+\textbf{Reliability:} As a robotic system used in agriculture, consistent performance and minimal downtime are critical.
+
+\textbf{Usability:} The user interface must be accessible to individuals with varying levels of technical expertise, supporting a diverse user base.
+
+\textbf{Maintainability:} Ease of updating the software and replacing hardware components is crucial for long-term operation.
+
+\textbf{Scalability:} The system should be capable of being expanded in functionality and size to accommodate larger farming operations.
+
+\section{Supporting Information}
+The supporting information for the FarmBot project encompasses comprehensive documentation available on the official website, including assembly guides, software and hardware documentation, FAQs, and a troubleshooting wiki. Additionally, the FarmBot community forum serves as a collaborative platform for users to share experiences, offer solutions, and provide feedback. The open-source nature of the project encourages contributions from developers, which are facilitated through repositories hosting the FarmBot software and hardware design files. Educational resources for schools and research institutions are also provided to promote STEM education through practical application in agriculture.
+
+
+

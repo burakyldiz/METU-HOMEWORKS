@@ -1,0 +1,31 @@
+\documentclass[12pt]{report}
+\input{PackagesAndSettings}
+\usepackage{float}
+\usepackage{svg}
+\begin{document}
+%\frontmatter
+{
+\pagenumbering{roman}
+\include{Sections/TitlePage}
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\include{Sections/Revision}
+}
+
+\include{Sections/Introduction}
+
+\bibliographystyle{ieeetr}
+\renewcommand{\bibname}{References}
+\bibliography{Sections/References}
+This document is written with respect to the IEEE 29148-2018 standard \cite{IEEE29148-2018}.
+
+
+\include{Sections/SpecificRequirements}
+\include{Sections/Suggestions}
+%only 3-person groups will cpmplete Section 5
+%\include{Sections/SysML}
+
+
+\end{document}
