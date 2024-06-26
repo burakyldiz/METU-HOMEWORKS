@@ -1,0 +1,460 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{array}
+\usepackage{booktabs}
+
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    numbers=left,
+    numberstyle=\tiny\color{mygray},
+    stepnumber=1,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    title=\lstname,
+    keywordstyle=\color{blue},
+    commentstyle=\color{mygray},
+    stringstyle=\color{mymauve},
+}
+\geometry{a4paper, margin=1in}
+
+\title{\includegraphics{9.4.png}\\ IE407 - Homework 3 Report}
+\author{Burak Yıldız - 2449049 \\ Ülkü Aktürk - 2450062}
+\date{Due Date: 14.06.2024}
+\begin{document}
+\maketitle
+\newpage
+
+\section*{Question 1: Linear Programming Model for Tasch Co.}
+
+\subsection*{Part (a): Linear Programming Model}
+
+\textbf{Decision Variables:}
+\begin{itemize}
+    \item \( x_1 \): Number of PCs produced
+    \item \( x_2 \): Number of Tablets produced
+    \item \( x_3 \): Number of Microprocessors produced
+\end{itemize}
+
+\textbf{Constraints:}
+\begin{align*}
+    1. & \quad 5x_1 + 2x_2 + x_3 \leq 120 \quad \text{(Production Time Constraint)} \\
+    2. & \quad 8x_1 + 4x_2 \leq 80 + x_3 \quad \text{(Microprocessor Usage Constraint)} \\
+    3. & \quad x_1 \geq 0, \quad x_2 \geq 0, \quad x_3 \geq 0 \quad \text{(Non-negativity Constraints)}
+\end{align*}
+
+\textbf{Objective Function:}
+\[
+\text{Maximize} \quad Z = 50x_1 + 30x_2 - 2x_3
+\]
+
+\section*{Part (b): Simplex Method Solution}
+
+\subsubsection*{Initial Simplex Tableau}
+
+First, we convert the linear programming problem into standard form by introducing slack variables \(s_4\) and \(s_5\). The standard form is:
+
+\[
+\begin{aligned}
+\text{Maximize } & F(x) = 50x_1 + 30x_2 - 2x_3 \\
+\text{Subject to:} \\
+& 5x_1 + 2x_2 + x_3 + s_4 = 120 \\
+& 8x_1 + 4x_2 - x_3 + s_5 = 80 \\
+& x_1, x_2, x_3, s_4, s_5 \geq 0
+\end{aligned}
+\]
+
+We set up the initial simplex tableau:
+
+\[
+\begin{array}{c|cccccc|c}
+ & x_1 & x_2 & x_3 & s_4 & s_5 & Z & \text{RHS} \\
+\hline
+s_4 & 5 & 2 & 1 & 1 & 0 & 0 & 120 \\
+s_5 & 8 & 4 & -1 & 0 & 1 & 0 & 80 \\
+\hline
+Z & -50 & -30 & 2 & 0 & 0 & 1 & 0 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 1}
+
+\textbf{Step 1: Determine the Entering Variable}
+
+ Here, \( x_1 \) has the most negative coefficient (-50), so \( x_1 \) is the entering variable.
+
+\textbf{Step 2: Determine the Leaving Variable}
+
+The smallest ratio is 10, so \( s_5 \) is the leaving variable.
+
+\textbf{Pivot Operation}
+
+\[
+\begin{array}{c|cccccc|c}
+ & x_1 & x_2 & x_3 & s_4 & s_5 & Z & \text{RHS} \\
+\hline
+s_4 & 5 & 2 & 1 & 1 & 0 & 0 & 120 \\
+x_1 & 1 & \frac{1}{2} & -\frac{1}{8} & 0 & \frac{1}{8} & 0 & 10 \\
+\hline
+Z & -50 & -30 & 2 & 0 & 0 & 1 & 0 \\
+\end{array}
+\]
+
+Next, we perform row operations
+
+\[
+\begin{array}{c|cccccc|c}
+ & x_1 & x_2 & x_3 & s_4 & s_5 & Z & \text{RHS} \\
+\hline
+s_4 & 0 & -0.5 & 1.625 & 1 & -0.625 & 0 & 70 \\
+x_1 & 1 & \frac{1}{2} & -\frac{1}{8} & 0 & \frac{1}{8} & 0 & 10 \\
+\hline
+Z & 0 & -5 & -3.25 & 0 & 6.25 & 1 & 500 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 2}
+
+\textbf{Step 1: Determine the Entering Variable}
+
+ \( x_2 \) (-5), so \( x_2 \) is the entering variable.
+
+\textbf{Step 2: Determine the Leaving Variable}
+
+\( x_1 \) is the leaving variable.
+
+\textbf{Pivot Operation}
+
+
+\[
+\begin{array}{c|cccccc|c}
+ & x_1 & x_2 & x_3 & s_4 & s_5 & Z & \text{RHS} \\
+\hline
+s_4 & 0 & -0.5 & 1.625 & 1 & -0.625 & 0 & 70 \\
+x_2 & 2 & 1 & -\frac{1}{4} & 0 & \frac{1}{4} & 0 & 20 \\
+\hline
+Z & 0 & -5 & -3.25 & 0 & 6.25 & 1 & 500 \\
+\end{array}
+\]
+
+Next, we perform row operations
+
+\[
+\begin{array}{c|cccccc|c}
+ & x_1 & x_2 & x_3 & s_4 & s_5 & Z & \text{RHS} \\
+\hline
+s_4 & 1 & 0 & 1.5 & 1 & -0.5 & 0 & 80 \\
+x_2 & 2 & 1 & -\frac{1}{4} & 0 & \frac{1}{4} & 0 & 20 \\
+\hline
+Z & 10 & 0 & -4 & 0 & 7.5 & 1 & 600 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 3}
+
+\textbf{Step 1: Determine the Entering Variable}
+
+The variable with the most negative coefficient in the Z-row is \( x_3 \) (-4), so \( x_3 \) is the entering variable.
+
+\textbf{Step 2: Determine the Leaving Variable}
+
+The smallest positive ratio is 53.33, so \( s_4 \) is the leaving variable.
+
+\textbf{Pivot Operation}
+
+
+\[
+\begin{array}{c|cccccc|c}
+ & x_1 & x_2 & x_3 & s_4 & s_5 & Z & \text{RHS} \\
+\hline
+s_4 & \frac{2}{3} & 0 & 1 & \frac{2}{3} & -\frac{1}{3} & 0 & \frac{80}{3} \\
+x_2 & 2 & 1 & -\frac{1}{4} & 0 & \frac{1}{4} & 0 & 20 \\
+\hline
+Z & 10 & 0 & -4 & 0 & 7.5 & 1 & 600 \\
+\end{array}
+\]
+
+Next, we perform row operations
+
+\[
+\begin{array}{c|cccccc|c}
+ & x_1 & x_2 & x_3 & s_4 & s_5 & Z & \text{RHS} \\
+\hline
+s_4 & \frac{2}{3} & 0 & 1 & \frac{2}{3} & -\frac{1}{3} & 0 & \frac{80}{3} \\
+x_2 & \frac{8}{3} & 1 & 0 & \frac{2}{3} & \frac{1}{12} & 0 & \frac{260}{3} \\
+\hline
+Z & \frac{38}{3} & 0 & 0 & \frac{8}{3} & 6 & 1 & \frac{893.33}{3} \\
+\end{array}
+\]
+
+\subsubsection*{Optimal Solution}
+
+The optimal solution is:
+
+\[
+\begin{aligned}
+x_1 &= 0 \\
+x_2 &= 33.33 \\
+x_3 &= 53.33 \\
+\end{aligned}
+\]
+
+The maximum profit is \( Z = 893.33 \).
+
+\subsection*{Part (c): Solution Using Pyomo}
+The code is appended at the end of the report.
+
+\subsubsection*{Output of the code}
+
+The output of the code is:
+
+\begin{itemize}
+    \item \(x_1\): 0.0
+    \item \(x_2\): 33.3333333333333
+    \item \(x_3\): 53.3333333333333
+    \item Objective: 893.3333333333323
+\end{itemize}
+
+
+\section*{Question 2: Mixed-Integer Programming Model}
+
+\section*{Branch and Bound Method}
+
+\subsection*{Initial LP Relaxation}
+
+We solve the initial LP relaxation by ignoring the integer constraints on \(x_2\) and \(x_3\):
+
+\[
+\begin{aligned}
+\text{Maximize } & F(x) = 8x_1 + 6x_2 + 2x_3 \\
+\text{Subject to:} \\
+& 6x_1 + 4x_2 + 2x_3 \leq 14 \\
+& 4x_1 + 2x_2 + 4x_3 \leq 22 \\
+& x_1, x_2, x_3 \geq 0
+\end{aligned}
+\]
+
+The initial simplex tableau is:
+
+\[
+\begin{array}{c|ccccc|c}
+ & x_1 & x_2 & x_3 & x_4 & x_5 & \text{RHS} \\
+\hline
+x_4 & 6 & 4 & 2 & 1 & 0 & 14 \\
+x_5 & 4 & 2 & 4 & 0 & 1 & 22 \\
+\hline
+Z & -8 & -6 & -2 & 0 & 0 & 0 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 1}
+
+\[
+\begin{array}{c|ccccc|c}
+\text{B} & C_b & P & x_1 & x_2 & x_3 & x_4 & x_5 & Q \\
+\hline
+x_4 & 0 & 14 & 8 & 6 & 2 & 0 & 0 & 2.33 \\
+x_5 & 0 & 22 & 4 & 2 & 4 & 0 & 1 & 5.5 \\
+\hline
+\text{max} & & & -8 & -6 & -2 & 0 & 0 & 0 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 2}
+
+\[
+\begin{array}{c|ccccc|c}
+\text{B} & C_b & P & x_1 & x_2 & x_3 & x_4 & x_5 & Q \\
+\hline
+x_1 & 8 & 2.33 & 1 & 0.67 & 0.33 & 0.17 & 0 & 3.5 \\
+x_5 & 0 & 12.67 & 0 & -0.67 & 2.67 & -0.67 & 1 & -19 \\
+\hline
+\text{max} & & & 0 & -0.67 & 0.67 & 1.33 & 0 & 18.67 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 3}
+
+\[
+\begin{array}{c|ccccc|c}
+\text{B} & C_b & P & x_1 & x_2 & x_3 & x_4 & x_5 & Q \\
+\hline
+x_1 & 8 & 0 & 1 & 0 & 0.5 & 0.25 & 0 & 0 \\
+x_2 & 6 & 3.5 & 1.5 & 1 & 0.5 & 0.25 & 0 & 0 \\
+x_5 & 0 & 15 & 1 & 0 & 0.5 & -0.5 & 1 & 0 \\
+\hline
+\text{max} & & & 0 & 1 & 0 & 1.5 & 0 & 21 \\
+\end{array}
+\]
+
+\subsection*{Optimal Solution for LP Relaxation}
+
+The optimal solution is:
+
+\begin{itemize}
+    \item \(x_1 = 0\)
+    \item \(x_2 = 3.5\)
+    \item \(x_3 = 0\)
+    \item Objective: 21
+\end{itemize}
+
+\subsection*{Branch and Bound Process}
+
+Since \(x_2 = 3.5\) is not an integer, we create two branches:
+1. \(x_2 \leq 3\)
+2. \(x_2 \geq 4\)
+
+\subsubsection*{Branch 1: \(x_2 = 3\)}
+
+For this branch, we add the constraint \( x_2 = 3 \) to the original problem:
+
+\[
+\begin{aligned}
+\text{Maximize } & F(x) = 8x_1 + 6x_2 + 2x_3 \\
+\text{Subject to:} \\
+& 6x_1 + 2x_2 + x_3 \leq 14 \\
+& 4x_1 + 2x_2 + 4x_3 \leq 22 \\
+& x_2 = 3 \\
+& x_1 \geq 0 \quad (x_1 \text{ continuous}) \\
+& x_3 \geq 0 \quad (x_3 \text{ integer})
+\end{aligned}
+\]
+
+The revised simplex tableau for this branch is:
+
+\[
+\begin{array}{c|ccccc|c}
+ & x_1 & x_2 & x_3 & x_4 & \text{RHS} \\
+\hline
+x_3 & 0 & 2 & 6 & 1 & 0.33 \\
+x_4 & 0 & 16 & 4 & 1 & 4 \\
+\hline
+Z & 0 & -8 & -2 & 0 & 0 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 1}
+
+\[
+\begin{array}{c|ccccc|c}
+\text{B} & C_b & P & x_1 & x_2 & x_3 & x_4 & Q \\
+\hline
+x_3 & 0 & 2 & 8 & 2 & 0 & 0.33 \\
+x_4 & 0 & 16 & 4 & 1 & 0 & 4 \\
+\hline
+\text{max} & & & -8 & -6 & 0 & 0 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 2}
+
+\[
+\begin{array}{c|ccccc|c}
+\text{B} & C_b & P & x_1 & x_2 & x_3 & x_4 & Q \\
+\hline
+x_1 & 8 & 0.33 & 1 & 0.33 & 0.17 & 0 & 3.5 \\
+x_4 & 0 & 14.67 & 0 & 2.67 & -0.67 & 1 & -19 \\
+\hline
+\text{max} & & & 0 & 0.67 & 1.33 & 0 & 18.67 \\
+\end{array}
+\]
+
+\subsubsection*{Iteration 3}
+
+\[
+\begin{array}{c|ccccc|c}
+\text{B} & C_b & P & x_1 & x_2 & x_3 & x_4 & Q \\
+\hline
+x_1 & 8 & 0 & 1 & 0.5 & 0.25 & 0 & 0 \\
+x_2 & 6 & 3.5 & 1.5 & 0.5 & 0.25 & 0 & 0 \\
+x_5 & 0 & 15 & 1 & 0 & -0.5 & 1 & 0 \\
+\hline
+\text{max} & & & 0 & 1 & 0 & 0 & 21 \\
+\end{array}
+\]
+
+The solution for this branch is:
+
+\begin{itemize}
+    \item \(x_1 = 0.33\)
+    \item \(x_2 = 3\)
+    \item \(x_3 = 0\)
+    \item Objective: 20.67
+\end{itemize}
+
+\subsubsection*{Branch 2: \(x_2 = 4\)}
+
+For this branch, we add the constraint \( x_2 = 4 \) to the original problem: \\
+
+Even if the other variables are zero is $x_2$ is 4 the second constraint is not satisfied so we eliminate this branch.
+\subsection*{Comparison of Solutions}
+
+We compare the objective values from both branches:
+
+\[
+\begin{aligned}
+\text{Initial branch:} & \quad Z = 21 \quad \text{for} \quad x_1 = 0, x_2 = 3.5, x_3 = 0 \\
+\text{Branch 1:} & \quad Z = 20.67 \quad \text{for} \quad x_1 = 0.33, x_2 = 3, x_3 = 0 \\
+\text{Branch 2:} & \quad Z = 4 \quad \text{for} \quad x_1 = 0, x_2 = 4, x_3 = 0 \\
+
+\end{aligned}
+\]
+
+Branch 2 does not satisfy the constraints so that branch is eliminated and in the initial branch $x_2$ is not an integer so we choose branch 1 for optimal solution.
+
+\subsection*{Optimal Solution}
+
+The optimal solution is:
+
+\begin{itemize}
+    \item \(x_1 = 0.33\)
+    \item \(x_2 = 3\)
+    \item \(x_3 = 0\)
+    \item Objective: 20.67
+\end{itemize}
+
+\subsection*{Part (b): Solution Using Pyomo}
+
+\subsubsection*{Output of the code}
+
+The code is appended at the end of the report ,the output of the code is:
+
+\begin{itemize}
+    \item \(x_1\): 0.333333333333333
+    \item \(x_2\): 3.0
+    \item \(x_3\): 0.0
+    \item Objective: 20.666666666666664
+\end{itemize}
+
+\newpage
+\appendix
+\section*{Appendix}
+
+\subsection{Question 1: Initial Model Code}
+
+\lstinputlisting{tasch_co_lp.py}
+
+\newpage
+
+\subsection{Question 2: Initial Model Code}
+\lstinputlisting{mip_model.py}
+
+\end{document}
+

@@ -1,0 +1,337 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\footnotesize,
+    numbers=left,
+    numberstyle=\tiny\color{mygray},
+    stepnumber=1,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    title=\lstname,
+    keywordstyle=\color{blue},
+    commentstyle=\color{mygray},
+    stringstyle=\color{mymauve},
+}
+\geometry{a4paper, margin=1in}
+
+\title{\includegraphics{9.4.png}\\ IE407 - Homework 2 Report}
+\author{Burak Yıldız - 2449049 \\ Ülkü Aktürk - 2450062}
+\date{Due Date: 16.05.2024}
+
+\begin{document}
+
+\maketitle
+\newpage
+
+\section*{Abstract}
+This report outlines the steps taken to solve a transportation optimization problem using Pyomo. The problem involves determining the optimal transportation plan from warehouses to distribution centers and from distribution centers to neighborhoods to minimize total costs. Different cost structures based on delivery volumes are also considered.
+
+\section*{Introduction}
+The transportation problem consists of multiple warehouses with specific capacities, several distribution centers, and several neighborhoods with given demands. The goal is to minimize the total transportation cost while meeting the demands of all neighborhoods. We approach this problem in three parts:
+\begin{itemize}
+    \item Part A: Basic transportation optimization.
+    \item Part B: Inclusion of operating costs.
+    \item Part C: Cost adjustments based on delivery volumes.
+\end{itemize}
+
+\section*{Part A: Basic Transportation Optimization}
+\subsection*{Model}
+The model includes the following components:
+\begin{itemize}
+    \item \textbf{Sets:} Warehouses, Distribution Centers, Neighborhoods.
+    \item \textbf{Parameters:} Supply capacities, demand requirements, transportation costs.
+    \item \textbf{Variables:} Amount transported from warehouses to distribution centers, and from distribution centers to neighborhoods.
+    \item \textbf{Objective:} Minimize total transportation cost.
+    \item \textbf{Constraints:} Supply limits, demand fulfillment.
+\end{itemize}
+
+\subsection*{Sets}
+\begin{align*}
+W & : \text{Set of warehouses} \\
+DC & : \text{Set of distribution centers} \\
+NH & : \text{Set of neighborhoods}
+\end{align*}
+
+\subsection*{Parameters}
+\begin{align*}
+pS[w] & : \text{Supply capacity of warehouse } w \in W \\
+pD[nh] & : \text{Demand of neighborhood } nh \in NH \\
+pC_{wh\_dc}[w, dc] & : \text{Cost from warehouse } w \text{ to distribution center } dc \\
+pC_{dc\_nh}[dc, nh] & : \text{Cost from distribution center } dc \text{ to neighborhood } nh
+\end{align*}
+
+\subsection*{Variables}
+\begin{align*}
+vX_{wh\_dc}[w, dc] & : \text{Amount transported from warehouse } w \text{ to distribution center } dc \\
+vX_{dc\_nh}[dc, nh] & : \text{Amount transported from distribution center } dc \text{ to neighborhood } nh
+\end{align*}
+
+\subsection*{Objective Function}
+\[
+\text{Minimize } \sum_{w \in W} \sum_{dc \in DC} pC_{wh\_dc}[w, dc] \cdot vX_{wh\_dc}[w, dc] + \sum_{dc \in DC} \sum_{nh \in NH} pC_{dc\_nh}[dc, nh] \cdot vX_{dc\_nh}[dc, nh]
+\]
+
+\subsection*{Constraints}
+\begin{align*}
+\sum_{dc \in DC} vX_{wh\_dc}[w, dc] & \leq pS[w] & \forall w \in W \\
+\sum_{dc \in DC} vX_{dc\_nh}[dc, nh] & \geq pD[nh] & \forall nh \in NH
+\end{align*}
+
+\subsection*{Code}
+Pyomo is used to solve, the code can be found in appendix and the pyomo file can be found under the folder Part-A named as TransportModelPartA.py and the data used is under same folder named as TransportData.py which makes use of the file named TransportationData.xlsx
+
+\section*{Results for Part A}
+\subsection*{Optimal Transportation Plan}
+\begin{itemize}
+    \item Transportation amounts from warehouses to distribution centers can be found in the txt file under the folder Part-A
+    \item Transportation amounts from warehouses to distribution centers can be found in the txt file under the folder Part-A
+    \item Total transportation cost is 179760.0
+\end{itemize}
+
+\section*{Part B: Inclusion of Operating Costs}
+\subsection*{Model}
+In addition to the basic model, we include fixed operating costs for warehouses and distribution centers.
+
+\subsection*{Additional Parameters}
+\begin{align*}
+pOperating[w] & : \text{Operating cost of warehouse } w \\
+pOperating[dc] & : \text{Operating cost of distribution center } dc
+\end{align*}
+
+\subsection*{Additional Variables}
+\begin{align*}
+yW[w] & : \text{Binary variable indicating if warehouse } w \text{ is operational} \\
+yDC[dc] & : \text{Binary variable indicating if distribution center } dc \text{ is operational}
+\end{align*}
+
+\subsection*{Objective Function}
+\begin{align*}
+\text{Minimize } & \sum_{w \in W} \sum_{dc \in DC} pC_{wh\_dc}[w, dc] \cdot vX_{wh\_dc}[w, dc] \\
+& + \sum_{dc \in DC} \sum_{nh \in NH} pC_{dc\_nh}[dc, nh] \cdot vX_{dc\_nh}[dc, nh] \\
+& + \sum_{w \in W} pOperating[w] \cdot yW[w] \\
+& + \sum_{dc \in DC} pOperating[dc] \cdot yDC[dc]
+\end{align*}
+
+
+\subsection*{Additional Constraints}
+\begin{align*}
+vX_{wh\_dc}[w, dc] & \leq pS[w] \cdot yW[w] & \forall w \in W, \forall dc \in DC \\
+vX_{dc\_nh}[dc, nh] & \leq pCouriers[dc] \cdot yDC[dc] & \forall dc \in DC, \forall nh \in NH
+\end{align*}
+
+\subsection*{Code}
+Pyomo is used to solve , the code can be found in appendix and the pyomo file can be found under the folder Part-B named as TransportModelPartB.py and the data used is under same folder named as TransportData.py which makes use of the file named TransportationData.xlsx. Since the problem is an MIP the sensitivity analysis is not created for this part.
+\section*{Results for Part B}
+\subsection*{Optimal Transportation Plan with Operating Costs}
+\begin{itemize}
+    \item Transportation amounts from warehouses to distribution centers are printed when the code is run , it is provided in the appendix of this report.
+    \item Transportation amounts from warehouses to distribution centers printed when the code is run , it is provided in the appendix of this report.
+    \item Total transportation cost is 748691.0
+\end{itemize}
+
+\section*{Part C: Cost Adjustments Based on Delivery Volumes}
+\subsection*{Model}
+In this part, the delivery cost from DC1 to any neighborhood decreases from \$2.5 to \$1.5 per kilometer once deliveries exceed 2500 units. The cost adjustment applies only to the amount exceeding the threshold of 2500 units.
+
+\subsection*{Additional Parameters}
+\begin{align*}
+threshold & : \text{Threshold for cost adjustment (2500 units)} \\
+original\_cost\_per\_km & : \text{Original cost per kilometer (\$2.5)} \\
+reduced\_cost\_per\_km & : \text{Reduced cost per kilometer (\$1.5)}
+\end{align*}
+
+\subsection*{Additional Variables}
+\begin{align*}
+vX_{dc1\_nh\_below}[nh] & : \text{Amount transported from DC1 to neighborhoods below threshold} \\
+vX_{dc1\_nh\_above}[nh] & : \text{Amount transported from DC1 to neighborhoods above threshold}
+\end{align*}
+
+\subsection*{Additional Constraints}
+\begin{align*}
+vX_{dc\_nh}[1, nh] &= vX_{dc1\_nh\_below}[nh] + vX_{dc1\_nh\_above}[nh] & \forall nh \in NH \\
+vX_{dc1\_nh\_below}[nh] &\leq threshold & \forall nh \in NH \\
+vX_{dc1\_nh\_above}[nh] &\geq vX_{dc\_nh}[1, nh] - threshold & \forall nh \in NH
+\end{align*}
+
+\subsection*{Objective Function}
+\begin{align*}
+\text{Minimize } & \sum_{w \in W} \sum_{dc \in DC} pC_{wh\_dc}[w, dc] \cdot vX_{wh\_dc}[w, dc] \\
+& + \sum_{dc \in DC} \sum_{nh \in NH} \left( pC_{dc\_nh}[dc, nh] \cdot vX_{dc\_nh}[dc, nh] \right) \\
+& + \sum_{nh \in NH} \left( original\_cost\_per\_km \cdot vX_{dc1\_nh\_below}[nh] \right) \\
+& + \sum_{nh \in NH} \left( reduced\_cost\_per\_km \cdot vX_{dc1\_nh\_above}[nh] \right) \\
+& + \sum_{w \in W} pOperating_w[w] \cdot yW[w] \\
+& + \sum_{dc \in DC} pOperating_dc[dc] \cdot yDC[dc] \\
+& + \sum_{dc \in DC} \sum_{dc \in DC} pCouriers[dc] \cdot moto_courier_salary \cdot yDC[dc]
+\end{align*}
+
+\subsection*{Code}
+Pyomo is used to solve the problem. The code can be found in the appendix and the Pyomo file can be found under the folder Part-C named as TransportModelPartC.py. The data used is in the same folder named TransportData.py, which makes use of the file TransportationData.xlsx. Since the problem is an MIP, the sensitivity analysis is not created for this part.
+
+\section*{Results for Part C}
+\subsection*{Optimal Transportation Plan with Adjusted Costs}
+\begin{itemize}
+    \item Transportation amounts from warehouses to distribution centers are printed when the code is run and are provided in the appendix of this report.
+    \item Transportation amounts from distribution centers to neighborhoods are printed when the code is run and are provided in the appendix of this report.
+    \item Total transportation cost is 748691.0
+\end{itemize}
+
+
+\section*{Comments}
+\begin{itemize}
+    \item \textbf{Discussion of the effectiveness of the model:}
+    \begin{itemize}
+        \item The model effectively identifies the optimal transportation plan, minimizing the total cost while ensuring that the demands of all neighborhoods are met.
+        \item The inclusion of cost adjustments in Part C based on delivery volumes demonstrates the model's flexibility in handling different cost structures, which is a realistic consideration in logistics planning.
+        \item The binary variables and additional constraints used in Part C to manage cost reductions were successfully integrated into the model without introducing non-linearities, maintaining the linear structure required for efficient solution using linear programming solvers.
+        \item The results obtained from each part of the model (A, B, and C) provide a comprehensive view of how different factors (basic costs, operating costs, and volume-based cost adjustments) impact the overall transportation cost.
+    \end{itemize}
+    
+\end{itemize}
+\section*{Conclusion}
+The model successfully identifies the optimal transportation plan while minimizing costs. Adjustments in cost structures based on delivery volumes significantly contribute to cost savings. Future work may involve more dynamic models and real-time data integration.
+
+\newpage
+\appendix
+\section*{Appendix}
+
+\subsection{Part A: Initial Model Code}
+
+\lstinputlisting{TransportModelPartA.py}
+
+
+\subsection{Part B: Initial Model Code}
+\lstinputlisting{TransportModelPartB.py}
+
+\textbf{Transportation amounts from warehouses to distribution centers and distribution centers to neighborhoods:}
+\begin{verbatim}
+vX_wh_dc : Amount transported from warehouse to distribution center
+    Size=15, Index=W*DC
+    Key    : Lower : Value  : Upper : Fixed : Stale : Domain
+    (1, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 2) :     0 : 9000.0 :  None : False : False : NonNegativeReals
+    (1, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 4) :     0 : 5400.0 :  None : False : False : NonNegativeReals
+    (1, 5) :     0 : 7100.0 :  None : False : False : NonNegativeReals
+    (2, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 3) :     0 : 8100.0 :  None : False : False : NonNegativeReals
+    (2, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 5) :     0 : 3400.0 :  None : False : False : NonNegativeReals
+    (3, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+vX_dc_nh : Amount transported from distribution center to neighborhood
+    Size=30, Index=DC*NH
+    Key    : Lower : Value  : Upper : Fixed : Stale : Domain
+    (1, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 2) :     0 : 1500.0 :  None : False : False : NonNegativeReals
+    (2, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 5) :     0 : 4500.0 :  None : False : False : NonNegativeReals
+    (2, 6) :     0 : 3000.0 :  None : False : False : NonNegativeReals
+    (3, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 3) :     0 : 4000.0 :  None : False : False : NonNegativeReals
+    (3, 4) :     0 :  600.0 :  None : False : False : NonNegativeReals
+    (3, 5) :     0 : 3500.0 :  None : False : False : NonNegativeReals
+    (3, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 4) :     0 : 5400.0 :  None : False : False : NonNegativeReals
+    (4, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 1) :     0 : 5000.0 :  None : False : False : NonNegativeReals
+    (5, 2) :     0 : 5500.0 :  None : False : False : NonNegativeReals
+    (5, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+\end{verbatim}
+
+\subsection{Part C: Initial Model Code}
+\lstinputlisting{TransportModelPartC.py}
+
+\textbf{Transportation amounts from warehouses to distribution centers and distribution centers to neighborhoods:}
+\begin{verbatim}
+vX_wh_dc : Amount transported from warehouse to distribution center
+    Size=15, Index=W*DC
+    Key    : Lower : Value  : Upper : Fixed : Stale : Domain
+    (1, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 2) :     0 : 9000.0 :  None : False : False : NonNegativeReals
+    (1, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 4) :     0 : 5400.0 :  None : False : False : NonNegativeReals
+    (1, 5) :     0 : 7100.0 :  None : False : False : NonNegativeReals
+    (2, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 3) :     0 : 8100.0 :  None : False : False : NonNegativeReals
+    (2, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 5) :     0 : 3400.0 :  None : False : False : NonNegativeReals
+    (3, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+vX_dc_nh : Amount transported from distribution center to neighborhood
+    Size=30, Index=DC*NH
+    Key    : Lower : Value  : Upper : Fixed : Stale : Domain
+    (1, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (1, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 2) :     0 : 1500.0 :  None : False : False : NonNegativeReals
+    (2, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (2, 5) :     0 : 4500.0 :  None : False : False : NonNegativeReals
+    (2, 6) :     0 : 3000.0 :  None : False : False : NonNegativeReals
+    (3, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (3, 3) :     0 : 4000.0 :  None : False : False : NonNegativeReals
+    (3, 4) :     0 :  600.0 :  None : False : False : NonNegativeReals
+    (3, 5) :     0 : 3500.0 :  None : False : False : NonNegativeReals
+    (3, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 1) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 2) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 4) :     0 : 5400.0 :  None : False : False : NonNegativeReals
+    (4, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (4, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 1) :     0 : 5000.0 :  None : False : False : NonNegativeReals
+    (5, 2) :     0 : 5500.0 :  None : False : False : NonNegativeReals
+    (5, 3) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 4) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 5) :     0 :    0.0 :  None : False : False : NonNegativeReals
+    (5, 6) :     0 :    0.0 :  None : False : False : NonNegativeReals
+\end{verbatim}
+
+\end{document}
