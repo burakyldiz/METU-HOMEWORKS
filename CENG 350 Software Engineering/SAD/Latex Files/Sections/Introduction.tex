@@ -1,0 +1,103 @@
+\pagenumbering{arabic}
+
+\chapter{Introduction} \label{introduction}
+The purpose of this (\gls{sad}) document is to provide a comprehensive architectural overview of FarmBot, highlighting its system design, components interaction, and justification for architectural decisions. This document aims to serve as a blueprint for project stakeholders and a guideline for developers to understand, maintain, and enhance the system. This document is in compliance with \gls{iso} \gls{iec} \gls{ieee} 42010.
+\cite{ieee29148}
+\section{Purpose and Objectives of FarmBot}
+
+\subsection{Purpose of the System}
+The FarmBot system is designed to automate and optimize small-scale agricultural tasks, embodying the principles of precision farming and sustainability. Through its open-source CNC farming machine, FarmBot aims to:
+\begin{itemize}
+    \item Automate planting, watering, weeding, and monitoring of plant health to reduce labor and increase efficiency.
+    \item Employ precision farming techniques to optimize resource use and enhance crop yields, promoting sustainability.
+    \item Offer customizability and flexibility, enabling users to tailor the system to their specific agricultural needs.
+    \item Serve as an educational tool, facilitating hands-on learning in \gls{stem} fields and sustainable agricultural practices.
+    \item Foster a community-driven approach to innovation in agriculture, encouraging collaboration and continuous improvement.
+\end{itemize}
+This system’s purpose aligns with advancing sustainable, efficient, and accessible agriculture through technological innovation.
+
+\subsection{Objectives of the System}
+The objectives of the FarmBot system are defined to support its purpose through specific, actionable goals. These include:
+\begin{enumerate}
+    \item \textbf{Increase Agricultural Productivity:} Enhance the output and efficiency of gardening and small-scale farming operations through automation.
+    \item \textbf{Improve Resource Management:} Utilize data-driven insights to optimize the use of water, fertilizers, and other inputs to minimize waste and environmental impact.
+    \item \textbf{Enhance User Experience:} Provide an intuitive, user-friendly interface that allows users of all technical levels to operate and benefit from FarmBot's capabilities.
+    \item \textbf{Expand Educational Impact:} Offer comprehensive educational packages that integrate with STEM curricula to promote agricultural and ecological awareness among students.
+    \item \textbf{Support Research in Precision Agriculture:} Enable researchers to use FarmBot as a platform for experiments in crop science, automation technologies, and sustainable practices.
+    \item \textbf{Cultivate Community Engagement:} Develop an active online community that contributes to the system’s development, shares best practices, and collaborates on innovative solutions.
+\end{enumerate}
+Each objective is aimed at reinforcing FarmBot’s role as a leader in automated, sustainable agriculture technology, while ensuring adaptability and scalability to meet future challenges and opportunities.
+
+
+\section{Scope}
+
+The scope of the FarmBot software encompasses several key modules designed to automate and optimize agricultural operations on a small scale. These modules include:
+
+\begin{itemize}
+    \item \textbf{Plant Scheduler}: Automates the planting process by scheduling tasks based on crop types and planting patterns.
+    \item \textbf{Water Management System}: Optimizes water usage by adjusting watering schedules in response to soil moisture levels and weather forecasts.
+    \item \textbf{Weed Detection and Control}: Employs image recognition to identify and manage weed growth with minimal human intervention.
+    \item \textbf{Health Monitoring}: Utilizes sensor data to monitor plant health and soil conditions, providing actionable insights to users.
+    \item \textbf{\gls{ui}}: Offers a web-based interface for users to interact with FarmBot, customizing settings, monitoring operations, and receiving updates.
+\end{itemize}
+
+These software products facilitate the core functionalities of FarmBot, enabling efficient, automated farming operations. They are designed to:
+
+\begin{itemize}
+    \item Reduce manual labor and operational complexity in gardening and small-scale farming.
+    \item Enhance crop yields and sustainability by optimizing resource usage and environmental adaptation.
+    \item Provide educational opportunities through hands-on engagement with agricultural technology.
+\end{itemize}
+
+The application of FarmBot's software is targeted at individual gardeners, educators, and small-scale farmers, offering significant benefits such as increased efficiency, sustainability, and accessibility to precision agriculture. The objectives and goals of this project align with promoting sustainable farming practices, advancing agricultural education, and fostering a community of innovation in farming technology. This scope is consistent with the higher-level specifications outlined in the system requirements, focusing on the integration of technology into agriculture to meet modern demands for food production and environmental stewardship.
+\cite{farmbotDocs}
+\section{Stakeholders and their concerns}
+
+The FarmBot system involves a diverse group of stakeholders, each with distinct roles and concerns regarding the system's development, deployment, and day-to-day operations. Understanding these concerns is crucial for tailoring the architecture to meet their needs effectively.
+
+\subsection{End Users (Farmers and Hobbyists)}
+\textbf{Concerns:}
+\begin{itemize}
+    \item \textbf{Usability:} How intuitive and user-friendly is the interface? Can users of varying technical skills easily configure and operate FarmBot?
+    \item \textbf{Reliability:} Does FarmBot perform consistently without failures, especially in critical operations like watering and planting?
+    \item \textbf{Customizability:} Can the system be easily modified to fit different garden sizes and types of crops?
+    \item \textbf{Support and Maintenance:} Is there accessible support for troubleshooting issues? What are the maintenance requirements?
+\end{itemize}
+
+\subsection{Developers and Technical Staff}
+\textbf{Concerns:}
+\begin{itemize}
+    \item \textbf{Code Maintainability:} How well-documented is the codebase? Is the system architecture designed to facilitate updates and scalability?
+    \item \textbf{Integration Capabilities:} How easily can new technologies or modules be integrated into the existing system?
+    \item \textbf{Security:} Are there adequate measures in place to secure data and protect the system from unauthorized access?
+\end{itemize}
+
+\subsection{Investors and Funding Bodies}
+\textbf{Concerns:}
+\begin{itemize}
+    \item \textbf{Return on Investment:} What is the potential market reach and profitability of FarmBot? How does it stand against competitors?
+    \item \textbf{Sustainability:} Does the project align with green and sustainable agricultural practices?
+    \item \textbf{Scalability:} Is the architecture designed to handle growth in user base and functional scope?
+\end{itemize}
+
+\subsection{Educational Institutions}
+\textbf{Concerns:}
+\begin{itemize}
+    \item \textbf{Educational Value:} How effectively can FarmBot be used as a teaching tool in agricultural and technical education?
+    \item \textbf{Accessibility:} Is the system affordable and easy to deploy in a school environment?
+    \item \textbf{Safety:} Are all components and operations safe for use by students?
+\end{itemize}
+
+\subsection{Regulatory Authorities}
+\textbf{Concerns:}
+\begin{itemize}
+    \item \textbf{Compliance:} Does the system comply with local, national, and international regulations concerning data privacy and agricultural operations?
+    \item \textbf{Environmental Impact:} Does the system adhere to environmental standards and contribute positively to ecological sustainability?
+\end{itemize}
+
+Each stakeholder group's concerns guide the development and ongoing refinement of FarmBot's architecture, ensuring the system is robust, efficient, and aligned with the expectations and requirements of all parties involved.
+
+
+
+
+
